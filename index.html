@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title></title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="googlebot" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+<body>
+    <textarea id="paraInput" name="w3review" rows="5" cols="50"></textarea>
+    <br>
+    <button id="calculateStats" onc="">
+      Calculate Stats
+    </button>
+    <div id="histogramoContainer"></div>
+
+    <script type="text/javascript">
+      const elements = {}
+
+      function allLetter(inputtxt) {
+        var letters = /^[A-Za-z]+$/;
+        if (inputtxt.match(letters)) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      document.getElementById("paraInput").addEventListener('keydown', (event) => {
+        if (!allLetter(event.key)) return
+        elements[event.key] = (elements[event.key] || 0) + 1
+      })
+
+      function calculateStats() {
+        const fractionPercentage = {}
+        document.getElementById("histogramoContainer").innerHTML = '';
+        const totalWords = Object.values(elements).reduce((acc, curr) => {
+          return acc + curr
+        }, 0)
+        Object.keys(elements).map(item => {
+          fractionPercentage[item] = (elements[item] * 100) / totalWords;
+        })
+        let histogramHtml = '';
+        Object.keys(fractionPercentage).map(item => {
+          histogramHtml += `${item}: ${[...Array(Math.round(fractionPercentage[item]||0))].map(()=> '#').join('')} - ${(fractionPercentage[item]||0).toFixed(2)}%<br/>`
+        });
+        document.getElementById("histogramoContainer").innerHTML = histogramHtml;
+      }
+
+      document.getElementById("calculateStats").onclick = calculateStats
+    </script>
+  </body>
+</html>
